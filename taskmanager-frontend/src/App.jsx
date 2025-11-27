@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { loginSuccess, logout } from './redux/authSlice';
 import api from './api/axios';
-import UserList from './components/userList';
-import TaskManager from './components/taskManager';
+import UserList from './components/UserList';
+import TaskManager from './components/TaskManager';
 import SignIn from './components/SignIn';
 import './style.css';
 
