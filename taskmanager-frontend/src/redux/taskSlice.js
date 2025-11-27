@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+//Manejamos el estado de las tareas
 const taskSlice = createSlice({
   name: 'tasks',
   initialState: {

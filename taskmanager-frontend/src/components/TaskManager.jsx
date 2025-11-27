@@ -9,7 +9,7 @@ const TaskManager = () => {
   
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
-  const [filter, setFilter] = useState('all'); // Filtro de estado
+  const [filter, setFilter] = useState('all');
   const [editingId, setEditingId] = useState(null);
 
   // Cargar tareas al iniciar
@@ -30,27 +30,43 @@ const TaskManager = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        // Actualizar
-        const res = await api.put(`/tasks/${editingId}`, { title, description: desc });
-        // Flask a veces devuelve solo msg, así que construimos el objeto localmente o recargamos
-        dispatch(updateTask({ _id: editingId, title, description: desc, status: 'pending' })); // Simplificado
+        // Encontrar la tarea actual para no perder su status al editar texto
+        const currentTask = tasks.find(t => t._id === editingId);
+        const currentStatus = currentTask ? currentTask.status : 'pending';
+
+        // Actualizar en Backend
+        await api.put(`/tasks/${editingId}`, { title, description: desc });
+        
+        // Actualizar en Redux (mantenemos el status que tenía)
+        dispatch(updateTask({ 
+            _id: editingId, 
+            title, 
+            description: desc, 
+            status: currentStatus 
+        }));
         setEditingId(null);
       } else {
-        // Crear
+        // Crear nueva
         const res = await api.post('/tasks/', { title, description: desc });
-        // Añadimos al estado de Redux
-        dispatch(addTask({ _id: res.data.task_id, title, description: desc, status: 'pending' }));
+        dispatch(addTask({ 
+            _id: res.data.task_id, 
+            title, 
+            description: desc, 
+            status: 'pending' 
+        }));
       }
+      // Limpiar formulario
       setTitle('');
       setDesc('');
     } catch (error) {
-      alert("Error guardando tarea");
+      console.error(error);
+      alert("Error al guardar la tarea");
     }
   };
 
   // Manejar Eliminar
   const handleDelete = async (id) => {
-    if (!confirm("¿Borrar tarea?")) return;
+    if (!confirm("¿Estás seguro de borrar esta tarea?")) return;
     try {
       await api.delete(`/tasks/${id}`);
       dispatch(deleteTask(id));
@@ -70,66 +86,101 @@ const TaskManager = () => {
     }
   };
 
-  // Lógica de Filtrado (Punto 3)
+  // Lógica de Filtrado
   const filteredTasks = tasks.filter(task => {
     if (filter === 'all') return true;
     return task.status === filter;
   });
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>📋 Task Manager</h2>
+    <div>
+      <h2 style={{ color: '#4a90e2', marginBottom: '20px' }}>📋 Mis Tareas</h2>
       
-      {/* Formulario */}
-      <form onSubmit={handleSubmit} style={{ marginBottom: '20px', background: '#f9f9f9', padding: '15px' }}>
+      {/* Formulario Estilizado */}
+      <form onSubmit={handleSubmit} className="task-form">
         <input 
-          placeholder="Título" 
+          placeholder="Título de la tarea" 
           value={title} 
           onChange={e => setTitle(e.target.value)} 
           required 
-          style={{ marginRight: '10px' }}
+          style={{ flex: 2 }} // El título ocupa más espacio
         />
         <input 
-          placeholder="Descripción" 
+          placeholder="Descripción (opcional)" 
           value={desc} 
           onChange={e => setDesc(e.target.value)} 
-          style={{ marginRight: '10px' }}
+          style={{ flex: 3 }}
         />
-        <button type="submit">{editingId ? 'Actualizar' : 'Agregar'}</button>
-        {editingId && <button type="button" onClick={() => { setEditingId(null); setTitle(''); setDesc('') }}>Cancelar</button>}
+        
+        <div style={{ display: 'flex', gap: '5px', flex: 1 }}>
+            <button type="submit" className="btn-primary">
+                {editingId ? 'Guardar' : 'Agregar'}
+            </button>
+            
+            {editingId && (
+                <button 
+                    type="button" 
+                    className="btn-danger" 
+                    onClick={() => { setEditingId(null); setTitle(''); setDesc('') }}
+                >
+                    Cancelar
+                </button>
+            )}
+        </div>
       </form>
 
-      {/* Filtros */}
-      <div style={{ marginBottom: '15px' }}>
-        <label>Filtrar por estado: </label>
+      {}
+      <div style={{ marginBottom: '20px', maxWidth: '250px' }}>
+        <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>
+            Filtrar por estado:
+        </label>
         <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-          <option value="all">Todas</option>
-          <option value="pending">Pendientes</option>
-          <option value="in_progress">En Progreso</option>
-          <option value="completed">Completadas</option>
+          <option value="all">📝 Todas</option>
+          <option value="pending">⏳ Pendientes</option>
+          <option value="completed">✅ Completadas</option>
         </select>
       </div>
 
-      {/* Lista */}
+      {/* Lista de Tareas */}
       <div>
-        {filteredTasks.map(task => (
-          <div key={task._id} style={{ border: '1px solid #ccc', margin: '10px 0', padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
-            <div>
-              <h4 style={{ margin: 0, textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>
-                {task.title}
-              </h4>
-              <p style={{ margin: '5px 0' }}>{task.description}</p>
-              <small>Estado: <strong>{task.status}</strong></small>
+        {filteredTasks.length === 0 ? (
+            <p style={{ textAlign: 'center', color: '#888' }}>No hay tareas en esta categoría.</p>
+        ) : (
+            filteredTasks.map(task => (
+            <div key={task._id} className={`task-card ${task.status === 'completed' ? 'completed' : ''}`}>
+                <div style={{ flex: 1 }}>
+                <h4 style={{ 
+                    textDecoration: task.status === 'completed' ? 'line-through' : 'none',
+                    color: task.status === 'completed' ? '#888' : '#333'
+                }}>
+                    {task.title}
+                </h4>
+                <p style={{ margin: '5px 0', color: '#666' }}>{task.description}</p>
+                <span style={{ 
+                    fontSize: '0.8rem', 
+                    background: '#eee', 
+                    padding: '2px 8px', 
+                    borderRadius: '10px' 
+                }}>
+                    {/* Lógica de etiqueta simplificada */}
+                    {task.status === 'completed' ? 'Completada' : 'Pendiente'}
+                </span>
+                </div>
+                
+                <div className="task-actions">
+                <button onClick={() => toggleStatus(task)} title={task.status === 'completed' ? "Marcar pendiente" : "Marcar completada"}>
+                    {task.status === 'completed' ? '↩️' : '✅'}
+                </button>
+                <button onClick={() => { setEditingId(task._id); setTitle(task.title); setDesc(task.description); }} title="Editar tarea">
+                    ✏️
+                </button>
+                <button onClick={() => handleDelete(task._id)} title="Eliminar tarea">
+                    🗑️
+                </button>
+                </div>
             </div>
-            <div>
-              <button onClick={() => toggleStatus(task)}>
-                {task.status === 'completed' ? '⏮️' : '✅'}
-              </button>
-              <button onClick={() => { setEditingId(task._id); setTitle(task.title); setDesc(task.description); }}>✏️</button>
-              <button onClick={() => handleDelete(task._id)}>🗑️</button>
-            </div>
-          </div>
-        ))}
+            ))
+        )}
       </div>
     </div>
   );

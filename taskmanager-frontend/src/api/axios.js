@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:5000/api', // Tu backend Flask
+  baseURL: 'https://taskmanager-backend-93jf.onrender.com/api', 
 });
 
 // Interceptor para inyectar el token en cada request

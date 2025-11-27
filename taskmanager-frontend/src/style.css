@@ -1,0 +1,184 @@
+/* Reset básico y fuente */
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #f5f6fa;
+  --text-color: #2f3640;
+  --danger-color: #e74c3c;
+  --success-color: #2ecc71;
+  --card-bg: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+/* Layout Principal */
+.app-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+}
+
+/*  Autenticación (Login/Register) */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Pantalla completa */
+}
+
+.auth-card {
+  background: var(--card-bg);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.auth-card h2 {
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+/* Formularios  */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box; /* Para que el padding no rompa el ancho */
+  font-size: 1rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* Botones */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: #357abd;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+  padding: 8px 12px;
+}
+
+.btn-logout {
+  background-color: var(--danger-color);
+  color: white;
+  padding: 8px 16px;
+}
+
+.btn-link {
+  background: none;
+  color: var(--primary-color);
+  text-decoration: underline;
+  padding: 0;
+  margin-left: 5px;
+  font-size: 0.9rem;
+}
+
+/* Lista de Tareas */
+.task-form {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.task-card {
+  background: var(--card-bg);
+  border-left: 5px solid var(--primary-color);
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.task-card.completed {
+  border-left-color: var(--success-color);
+  opacity: 0.7;
+}
+
+.task-card h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+}
+
+.task-actions button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+  background: transparent;
+}
+
+.task-actions button:hover {
+  background: #f0f0f0;
+}
+
+/* Utilidades */
+.error-msg {
+  color: var(--danger-color);
+  background: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.toggle-text {
+  margin-top: 15px;
+  font-size: 0.9rem;
+}

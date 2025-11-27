@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# 💻 Task Manager Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este es el frontend para la aplicación de gestión de tareas. Está construido con **React** (usando **Vite** para mayor velocidad), **Redux Toolkit** para el manejo del estado global y **Axios** para la comunicación con la API.
 
-Currently, two official plugins are available:
+## 🚀 Requisitos Previos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Antes de comenzar, asegúrate de tener instalado:
 
-## React Compiler
+* **Node.js** (Versión LTS recomendada)
+* **npm** (Viene instalado con Node.js)
+* El **Backend** corriendo (ya sea localmente en el puerto 5000 o desplegado en Render).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Instalación y Configuración
 
-## Expanding the ESLint configuration
+Sigue estos pasos para configurar el proyecto en tu máquina local:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clonar el repositorio
+```
+bash
+git clone <URL_DEL_TU_REPOSITORIO_FRONTEND>
+cd taskmanager-frontend
+```
+## 2. Instalar dependencias
+```
+npm intall
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 3. Configuración de la API (Conexión con Backend)
+Para que el frontend se comunique con tu servidor, debes verificar la URL base.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Abre el archivo: src/api/axios.js.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Verifica la línea baseURL:
+Para desarrollo local:
+```
+baseURL: '[http://127.0.0.1:5000/api](http://127.0.0.1:5000/api)',
+```
+Para producción (Render/Vercel):
+```
+baseURL: '[https://taskmanager-backend-93jf.onrender.com/api](https://taskmanager-backend-93jf.onrender.com/api)',
+```
+
+Nota: Si estás probando localmente, asegúrate de que tu backend esté ejecutándose en otra terminal.
+
+## ▶️ Ejecución
+Una vez instaladas las dependencias, inicia el servidor de desarrollo:
+```
+npm run dev
+```
+
+Deberías ver algo como: ➜ Local: http://localhost:5173/
+
+Abre ese link en tu navegador para ver la aplicación.
+
+## 📦 Características y Tecnologías
+Este proyecto implementa las siguientes funcionalidades clave:
+
+⚛️ React + Vite: Para una interfaz rápida y reactiva.
+
+🔐 Autenticación JWT: Manejo de Login y Registro con almacenamiento seguro del token.
+
+🧠 Redux Toolkit:
+
+authSlice: Gestiona el estado de la sesión del usuario.
+
+taskSlice: Gestiona el estado global de las tareas (CRUD).
+
+🎨 Estilos CSS: Diseño limpio y responsivo (style.css).
+
+📡 Axios Interceptors: Inyección automática del token Bearer en cada petición.
+
+## 📂 Estructura del Proyecto
+```
+taskmanager-frontend/
+├── src/
+│   ├── api/
+│   │   └── axios.js         # Configuración del cliente HTTP y Base URL
+│   ├── components/
+│   │   ├── SignIn.jsx       # Formulario de Login y Registro
+│   │   ├── TaskManager.jsx  # Gestión de tareas (CRUD visual)
+│   │   └── UserList.jsx     # Lista de usuarios (Ejercicio práctico)
+│   ├── redux/
+│   │   ├── store.js         # Configuración del Store global
+│   │   ├── authSlice.js     # Reducer y acciones de Autenticación
+│   │   └── taskSlice.js     # Reducer y acciones de Tareas
+│   ├── App.jsx              # Componente principal y rutas
+│   ├── main.jsx             # Punto de entrada de React
+│   └── style.css            # Estilos globales de la aplicación
+├── index.html               # Archivo HTML base
+├── package.json             # Lista de dependencias y scripts
+└── vite.config.js           # Configuración de Vite
 ```

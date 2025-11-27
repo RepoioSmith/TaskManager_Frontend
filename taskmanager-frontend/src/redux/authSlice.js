@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+//Manejamos el estado de autenticación
 const initialState = {
   user: null,
   token: localStorage.getItem('token') || null, // Persistir sesión
